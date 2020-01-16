@@ -1,91 +1,136 @@
-# [![Flutter logo][]][flutter.dev]
+# Quickblox Flutter  SDK
 
-[![Build Status - Cirrus][]][Build status]
-[![Gitter Channel][]][Gitter badge]
-[![Twitter handle][]][Twitter badge]
+## Quick Start
+This guide demonstarates how to connect Quickblox Flutter SDK to your project and start development.
 
-Flutter is Google's SDK for crafting beautiful, fast user experiences for
-mobile, web and desktop from a single codebase. Flutter works with existing
-code, is used by developers and organizations around the world, and is free
-and open source.
+### Create a new app in the Admin Panel
+Quickblox application includes everything that brings messaging right into your application - chat, video calling, users, push notifications, etc. To create a QuickBlox application, follow the steps below:
 
-## Documentation
+1. Register a new account. Type in your email and password to sign in. You can also sign in with your Google or Github accounts. 
+2. Create the app clicking **New app** button. 
+3. Configure the app. Type in the information about your organization into corresponding fields and click **Add** button.
+4. Go to the screen with credentials. Locate **Credentials** groupbox and copy your **Application ID**, **Authorization Key**, and **Authorization Secret**. These data are needed to run your application on QuickBlox server.
 
-* [Install Flutter](https://flutter.dev/get-started/)
-* [Flutter documentation](https://flutter.dev/docs)
-* [Development wiki](https://github.com/flutter/flutter/wiki)
-* [Contributing to Flutter](https://github.com/flutter/flutter/blob/master/CONTRIBUTING.md)
+### Install Flutter SDK into your app
 
-For announcements about new releases and breaking changes, follow the
-[flutter-announce@googlegroups.com](https://groups.google.com/forum/#!forum/flutter-announce)
-mailing list.
+To create a new Flutter chat messaging app with QuickBlox SDK from scratch follow these steps:
+1. Install [Flutter](https://flutter.dev/docs/get-started/install) for your platform
+2. Run `flutter create myapp` to create a new project
+4. Add QuickBlox SDK into your project's dependencies into **dependencies** section in \**pubspec.yaml*\* file in your root project dir.  
 
-## About Flutter
+`
+dependencies:
+quickblox_sdk: 0.1.0-alpha
+`
 
-We think Flutter will help you create beautiful, fast apps, with a productive,
-extensible and open development model.
+### Send your first message
+#### Initialize QuickBlox SDK
 
-### Beautiful user experiences
+Initialize the framework with your application credentials. Pass `appId`, `authKey`, `authSecret`, `accountKey` to the `QB.settings.init` method using the code snippet below. As a result, your application details are stored in the server database and can be subsequently identified on the server. 
 
-We want to enable designers to deliver their full creative vision without being
-forced to water it down due to limitations of the underlying framework.
-Flutter's [layered architecture] gives you control over every pixel on the
-screen, and its powerful compositing capabilities let you overlay and animate
-graphics, video, text and controls without limitation. Flutter includes a full
-[set of widgets][widget catalog] that deliver pixel-perfect experiences on both
-iOS and Android.
+```dart
+const String APP_ID = "XXXXX";
+const String AUTH_KEY = "XXXXXXXXXXXX";
+const String AUTH_SECRET = "XXXXXXXXXXXX";
+const String ACCOUNT_KEY = "XXXXXXXXXXXX";
+const String API_ENDPOINT = ""; //optional
+const String CHAT_ENDPOINT = ""; //optional
 
-![Reflectly hero image][Reflectly hero image]
+try {
+      await QB.settings.init(APP_ID, AUTH_KEY, AUTH_SECRET, ACCOUNT_KEY,
+          apiEndpoint: API_ENDPOINT, chatEndpoint: CHAT_ENDPOINT);
+    } on PlatformException catch (e) {
+        // Some error occured, look at the exception message for more details 
+    }
+```
 
-### Fast results
+#### Authorize user
 
-Flutter is fast. It's powered by the same hardware-accelerated [Skia] 2D
-graphics library that underpins Chrome and Android. We architected Flutter to
-support glitch-free, jank-free graphics at the native speed of your device.
-Flutter code is powered by the world-class [Dart platform], which enables
-compilation to 32-bit and 64-bit ARM machine code for iOS and Android, as well
-as JavaScript for the web and Intel x64 for desktop devices.
+In order to use the abilities of QuickBlox SDK, you need to authorize your app on the server, log in to your account and create a session. To get it all done call `QB.auth.login` method and pass `login` and `password` parameters to it using the code snippet below. 
 
-![Dart platforms][Dart platforms]
+```dart
+try {
+      QBLoginResult result = await QB.auth.login(login, password);
+      QBUser qbUser = result.qbUser;
+      QBSession qbSession = result.qbSession;
+    } on PlatformException catch (e) {
+         // Some error occured, look at the exception message for more details     
+    }
+```    
+**Note!**
+You must initialize SDK before calling any methods through the SDK except for the method initializing your QuickBlox instance. If you attempt to call a method without connecting, the error is returned.
 
-### Productive development
+#### Connect to chat
 
-Flutter offers stateful hot reload, allowing you to make changes to your code
-and see the results instantly without restarting your app or losing its state.
+To connect to chat server, use the code snippet below:
 
-[![Hot reload animation][]][Hot reload]
+```dart
+try {
+      await QB.chat.connect(userId, userPassword);
+     } on PlatformException catch (e) {
+          // Some error occured, look at the exception message for more details     
+     }
+```
 
-### Extensible and open model
+#### Create dialog
 
-Flutter works with any development tool (or none at all), but includes editor
-plug-ins for both [Visual Studio Code] and [IntelliJ / Android Studio]. Flutter
-provides [thousands of packages][Flutter packages] to speed your development,
-regardless of your target platform. And accessing other native code is easy,
-with support for both [FFI] and [platform-specific APIs][platform channels]. 
+QuickBlox provides three types of dialogs: **1-1 dialog**, **group dialog**, and **public dialog**.
 
-Flutter is a fully open source project, and we welcome contributions.
-Information on how to get started can be found at our
-[contributor guide](CONTRIBUTING.md).
+Let’s create **1-1 dialog**. Call `QB.chat.createDialog` method and pass `QBChatDialogTypes.CHAT` parameter as a dialog type to it. `QBChatDialogTypes.CHAT` parameter allows specifying that two occupants are going to participate in the dialog.
 
-[Flutter logo]: https://flutter.dev/assets/flutter-lockup-4cb0ee072ab312e59784d9fbf4fb7ad42688a7fdaea1270ccf6bbf4f34b7e03f.svg
-[flutter.dev]: https://flutter.dev
-[Build Status - Cirrus]: https://api.cirrus-ci.com/github/flutter/flutter.svg
-[Build status]: https://cirrus-ci.com/github/flutter/flutter/master
-[Gitter Channel]: https://badges.gitter.im/flutter/flutter.svg
-[Gitter badge]: https://gitter.im/flutter/flutter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-[Twitter handle]: https://img.shields.io/twitter/follow/flutterdev.svg?style=social&label=Follow
-[Twitter badge]: https://twitter.com/intent/follow?screen_name=flutterdev
-[layered architecture]: https://flutter.dev/docs/resources/inside-flutter
-[widget catalog]: https://flutter.dev/widgets/
-[Reflectly hero image]: https://github.com/flutter/website/blob/master/src/images/homepage/reflectly-hero-600px.png
-[Dart platforms]: https://dart.dev/assets/platforms-7f4d540acf9fe801b456ad74f9f855230a385014d05d9f5997c878b889a67a0f.svg
-[Skia]: https://skia.org/
-[Dart platform]: https://dart.dev/
-[Hot reload animation]: https://raw.githubusercontent.com/flutter/website/master/src/_assets/image/tools/android-studio/hot-reload.gif
-[Hot reload]: https://flutter.dev/docs/development/tools/hot-reload
-[Visual Studio Code]: https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter
-[IntelliJ / Android Studio]: https://plugins.jetbrains.com/plugin/9212-flutter
-[Flutter packages]: https://pub.dev/flutter
-[FFI]: https://flutter.dev/docs/development/platform-integration/c-interop
-[platform channels]: https://flutter.dev/docs/development/platform-integration/platform-channels
-[interop example]: https://github.com/flutter/flutter/tree/master/examples/platform_channel
+```dart
+try {
+      QBDialog createdDialog = await QB.chat.createDialog(occupantsIds, dialogName, dialogType: dialogType);
+      } on PlatformException catch (e) {
+           // Some error occured, look at the exception message for more details     
+      }
+```      
+
+#### Subscribe to receive messages
+
+QuickBlox provides message event handler allowing to notify client apps of events that happen on the chat. Thus, when a dialog has been created, a user can subscribe to receive notifications about new incoming messages. To subscribe to message events call `QB.chat.subscribeMessageEvents` method and pass `dialogId`, `eventName`, `data` parameters to it using the following code snippet. The `QB.chat.subscribeMessageEvents` method tells SDK to send events about new messages.
+`eventName` - provides some values:
+
+- `QBChatEvents.RECEIVED_NEW_MESSAGE` - subscribe to `new messages` event
+
+```dart
+ await QB.chat.subscribeMessageEvents(dialogId, eventName, (data) {
+          //receive a new message
+          
+          Map<String, Object> map = new Map<String, dynamic>.from(data);
+          String messageType = map["type"];
+          if (messageType == QBChatEvents.RECEIVED_NEW_MESSAGE) {
+             Map<String, Object> payload = new Map<String, dynamic>.from(map["payload"]);
+             String messageBody = payload["body"];
+             String messageId = payload["id"];
+          }
+     } on PlatformException catch (e) {
+          // Some error occured, look at the exception message for more details     
+     }
+```     
+
+- Unsubscribe to `new messages` event
+
+```dart
+// eventName - QBChatEvents.RECEIVED_NEW_MESSAGE
+try {
+      await QB.chat.unsubscribeMessageEvents(dialogId, eventName);
+    } on PlatformException catch (e) {
+      // Some error occured, look at the exception message for more details
+    }
+```    
+
+#### Send message
+
+When a dialog is created, a user can send a message. To create and send your first message, call `QB.chat.sendMessage` method and specify the `dialogId` and `body` parameters to it. Pass `saveToHistory` parameter if you want this message to be saved in chat history that is stored forever.
+
+```dart
+try {
+      await QB.chat.sendMessage(dialogId, body: messageBody, saveToHistory: true);
+      } on PlatformException catch (e) {
+          // Some error occured, look at the exception message for more details     
+      }
+```      
+
+## LICENSE
+For license information, please visit: https://quickblox.com/terms-of-use/
