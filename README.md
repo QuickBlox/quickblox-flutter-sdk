@@ -3,6 +3,10 @@
 ## Quick Start
 This guide demonstarates how to connect Quickblox Flutter SDK to your project and start development.
 
+Documentation: https://docs.quickblox.com/docs/flutter-quick-start
+
+pub.dev package: https://pub.dev/packages/quickblox_sdk
+
 ### Create a new app in the Admin Panel
 Quickblox application includes everything that brings messaging right into your application - chat, video calling, users, push notifications, etc. To create a QuickBlox application, follow the steps below:
 
