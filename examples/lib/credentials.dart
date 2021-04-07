@@ -5,6 +5,8 @@ const String ACCOUNT_KEY = "";
 const String API_ENDPOINT = "";
 const String CHAT_ENDPOINT = "";
 
+const String JANUS_SERVER_URL = "";
+
 const String USER_LOGIN = "";
 const String USER_PASSWORD = "";
 const int LOGGED_USER_ID = 000000000;

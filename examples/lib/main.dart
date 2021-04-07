@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quickblox_sdk_example/credentials.dart';
 import 'package:quickblox_sdk_example/screens/auth_screen.dart';
 import 'package:quickblox_sdk_example/screens/chat_screen.dart';
+import 'package:quickblox_sdk_example/screens/conference_screen.dart';
 import 'package:quickblox_sdk_example/screens/content_screen.dart';
 import 'package:quickblox_sdk_example/screens/custom_objects_screen.dart';
 import 'package:quickblox_sdk_example/screens/events_screen.dart';
@@ -118,6 +119,16 @@ class MainScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (BuildContext context) => WebRTCScreen(),
+                    ))),
+            MaterialButton(
+                minWidth: 200,
+                child: Text('Conference'),
+                color: Theme.of(context).primaryColor,
+                textColor: Colors.white,
+                onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => ConferenceScreen(),
                     ))),
             Padding(
                 padding: EdgeInsets.fromLTRB(0, 30, 0, 0),

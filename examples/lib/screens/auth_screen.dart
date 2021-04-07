@@ -48,10 +48,10 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           MaterialButton(
             minWidth: 200,
-            child: Text('create session'),
+            child: Text('set session'),
             color: Theme.of(context).primaryColor,
             textColor: Colors.white,
-            onPressed: createSession,
+            onPressed: setSession,
           ),
           MaterialButton(
             minWidth: 200,
@@ -88,15 +88,15 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
-  Future<void> createSession() async {
+  Future<void> setSession() async {
     try {
       QBSession qbSession = DataHolder.getInstance().getSession();
 
-      QBSession sessionResult = await QB.auth.createSession(qbSession);
+      QBSession sessionResult = await QB.auth.setSession(qbSession);
 
       if (sessionResult != null) {
         DataHolder.getInstance().setSession(sessionResult);
-        SnackBarUtils.showResult(_scaffoldKey, "Create session success");
+        SnackBarUtils.showResult(_scaffoldKey, "Set session success");
       } else {
         DialogUtils.showError(context, Exception("The session in null"));
       }

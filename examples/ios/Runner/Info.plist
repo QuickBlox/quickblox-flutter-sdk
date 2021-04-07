@@ -41,11 +41,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
     <key>NSCameraUsageDescription</key>
-        <string>$(PRODUCT_NAME) would like to use your camera</string>
-        <key>NSLocationWhenInUseUsageDescription</key>
-        <string></string>
-        <key>NSMicrophoneUsageDescription</key>
-        <string>$(PRODUCT_NAME) would like to use your microphone to provide ability to record audio messages</string>
+    <string>$(PRODUCT_NAME) would like to use your camera</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string></string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>$(PRODUCT_NAME) would like to use your microphone to provide ability to record audio messages</string>
 </dict>
 </plist>
