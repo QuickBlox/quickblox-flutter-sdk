@@ -92,37 +92,44 @@ try {
 
 #### Subscribe to receive messages
 
-QuickBlox provides message event handler allowing to notify client apps of events that happen on the chat. Thus, when a dialog has been created, a user can subscribe to receive notifications about new incoming messages. To subscribe to message events call `QB.chat.subscribeMessageEvents` method and pass `dialogId`, `eventName`, `data` parameters to it using the following code snippet. The `QB.chat.subscribeMessageEvents` method tells SDK to send events about new messages.
-`eventName` - provides some values:
+QuickBlox provides chat event handler allowing to notify client apps of events that happen on the chat. Thus, when a dialog has been created, a user can subscribe to receive notifications about new incoming messages. To subscribe to message events call `QB.chat.subscribeChatEvent` method and pass QBChatEvents.RECEIVED_NEW_MESSAGE as an event parameter to it using the following code snippet.
+
+`event` - provides some values:
 
 - `QBChatEvents.RECEIVED_NEW_MESSAGE` - subscribe to `new messages` event
+- `QBChatEvents.RECEIVED_SYSTEM_MESSAGE` - subsccribe to `system messages` event
+- `QBChatEvents.MESSAGE_DELIVERED` - subscribe to `message delivered` event
+- `QBChatEvents.MESSAGE_READ` - subscribe to `message read` event
 
 ```dart
- await QB.chat.subscribeMessageEvents(dialogId, eventName, (data) {
-          //receive a new message
-          
-          Map<String, Object> map = new Map<String, dynamic>.from(data);
-          String messageType = map["type"];
-          if (messageType == QBChatEvents.RECEIVED_NEW_MESSAGE) {
-             Map<String, Object> payload = new Map<String, dynamic>.from(map["payload"]);
-             String messageBody = payload["body"];
-             String messageId = payload["id"];
-          }
-     } on PlatformException catch (e) {
-          // Some error occured, look at the exception message for more details     
-     }
-```     
 
-- Unsubscribe to `new messages` event
+StreamSubscription? _someSubscription;
 
-```dart
-// eventName - QBChatEvents.RECEIVED_NEW_MESSAGE
+...
+
+@override
+void dispose() {
+  if(_someSubscription != null) {
+    _someSubscription!.cancel();
+    _someSubscription = null;
+  }
+}
+
+...
+
+String event = QBChatEvents.RECEIVED_NEW_MESSAGE;
+
 try {
-      await QB.chat.unsubscribeMessageEvents(dialogId, eventName);
-    } on PlatformException catch (e) {
-      // Some error occured, look at the exception message for more details
-    }
-```    
+  _someSubscription = await QB.chat.subscribeChatEvent(event, (data) {
+        Map<dynamic, dynamic> map = Map<dynamic, dynamic>.from(data);
+    Map<dynamic, dynamic> payload = Map<dynamic, dynamic>.from(map["payload"]);
+    String? messageId = payload["id"];
+  }
+});
+} on PlatformException catch (e) {
+  // Some error occurred, look at the exception message for more details
+}
+```  
 
 #### Send message
 
