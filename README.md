@@ -38,7 +38,7 @@ or
 
 `
 dependencies:
-quickblox_sdk: 0.15.0-rc.1
+quickblox_sdk: 0.15.0-rc.2
 `
 
 ### Send your first message
