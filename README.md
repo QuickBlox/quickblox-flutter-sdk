@@ -32,7 +32,7 @@ To create a new Flutter chat messaging app with QuickBlox SDK from scratch follo
 
 `
 dependencies:
-quickblox_sdk: 0.18.4
+quickblox_sdk: 0.18.5
 `
 
 ### Send your first message
